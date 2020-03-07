@@ -4,10 +4,10 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
 
 inhibit_all_warnings!
-use_frameworks!
+use_frameworks! :linkage => :static
 
 target :MDRecordSDK do
-    pod 'MMFrameworks', :path => './MMFramework', :subspecs => ['Eta', 'MMFoundation']
+    pod 'MMFrameworks'
     pod 'Toast', '~> 4.0.0'
     pod 'MBProgressHUD', '~> 1.1.0'
     pod 'MJRefresh'
@@ -18,6 +18,7 @@ target :MDRecordSDK do
     pod 'YYImage'
     pod 'ReactiveCocoa', '2.5'
     pod 'JPImageresizerView'
+    pod 'GPUImage', :git => 'https://github.com/NaichuanYang/GPUImage.git', :commit => '3ba128277babc67048e10c5269694aebaa8bf581'
     
     pod 'MMVideoSDK', '2.3.2.3.2'
 end
