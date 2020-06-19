@@ -179,9 +179,11 @@ MDRecordCropImageViewControllerDelegate
 
         }];
         
-        if (MDRecordVideoSettingManager.enableBlur) {
+//        if (MDRecordVideoSettingManager.enableBlur) {
             self.adapter.outputImageSize = CGSizeMake(720, 1280);
-        }
+//        }
+        [self.adapter startProcess];
+        
         
         NSAssert(completeBlock, @"completeBlock can not be nil");
     }
@@ -281,7 +283,7 @@ MDRecordCropImageViewControllerDelegate
     self.graffitiCanvasView.frame = self.customContentView.bounds;
     self.textAdjustView.frame = self.customContentView.bounds;
     
-    [self.adapter reloadImage:image];
+//    [self.adapter reloadImage:image];
     [self updateRender];
 }
 
@@ -813,9 +815,9 @@ MDRecordCropImageViewControllerDelegate
 #pragma mark - MDRecordFilterDrawerControllerDelegate
 - (void)updateRender
 {
-    runSynchronouslyOnVideoProcessingQueue(^{
-        [self.adapter startProcess];
-    });
+//    runSynchronouslyOnVideoProcessingQueue(^{
+//        [self.adapter startProcess];
+//    });
 }
 
 // 滤镜
@@ -826,9 +828,9 @@ MDRecordCropImageViewControllerDelegate
     runSynchronouslyOnVideoProcessingQueue(^{
         if (self.filters.count >= 2) {
             MDRecordFilter *filterA = [self.filters objectAtIndex:self.currentFilterIndex defaultValue:nil];
-            [self.adapter configCurrentFilter:filterA];
+//            [self.adapter configCurrentFilter:filterA];
         }
-        [self updateRender];
+//        [self updateRender];
     });
     
 }
@@ -842,9 +844,9 @@ MDRecordCropImageViewControllerDelegate
     CGFloat skinSmoothFactor = [self realValueWithIndex:index beautySettingTypeStr:MDBeautySettingsSkinSmoothingAmountKey];
     CGFloat skinWhitenFactor = [self realValueWithIndex:index beautySettingTypeStr:MDBeautySettingsSkinWhitenAmountKey];
     
-    [self.adapter setSkinSmoothValue:skinSmoothFactor];
-    [self.adapter setSkinWhitenValue:skinWhitenFactor];
-    [self updateRender];
+//    [self.adapter setSkinSmoothValue:skinSmoothFactor];
+//    [self.adapter setSkinWhitenValue:skinWhitenFactor];
+//    [self updateRender];
 }
 
 // 大眼瘦脸
@@ -856,15 +858,15 @@ MDRecordCropImageViewControllerDelegate
     CGFloat bigEyeFactor = [self realValueWithIndex:index beautySettingTypeStr:MDBeautySettingsEyesEnhancementAmountKey];
     CGFloat thinFaceFactor = [self realValueWithIndex:index beautySettingTypeStr:MDBeautySettingsFaceThinningAmountKey];
     
-    [self.adapter setBeautyBigEyeValue:bigEyeFactor];
-    [self.adapter setBeautyThinFaceValue:thinFaceFactor];
-    [self updateRender];
+//    [self.adapter setBeautyBigEyeValue:bigEyeFactor];
+//    [self.adapter setBeautyThinFaceValue:thinFaceFactor];
+//    [self updateRender];
 }
 
 - (void)didSetFilterIntensity:(CGFloat)value {
     MDRecordFilter *filterA = [self.filters objectAtIndex:self.currentFilterIndex defaultValue:nil];
     [filterA setLutIntensity:value];
-    [self updateRender];
+//    [self updateRender];
 }
 
 // 瘦身
@@ -872,43 +874,43 @@ MDRecordCropImageViewControllerDelegate
     [self.beautySettingDict setInteger:index forKey:MDBeautySettingsThinBodyAmountKey];
     
     CGFloat thinBodyFactor = [self realValueWithIndex:index beautySettingTypeStr:MDBeautySettingsThinBodyAmountKey];
-    [self.adapter setBeautyThinBodyValue:thinBodyFactor];
-    [self updateRender];
+//    [self.adapter setBeautyThinBodyValue:thinBodyFactor];
+//    [self updateRender];
 }
 // 长腿
 - (void)didSelectedLongLegItem:(NSInteger)index {
     [self.beautySettingDict setInteger:index forKey:MDBeautySettingsLongLegAmountKey];
     
     CGFloat longLegFactor = [self realValueWithIndex:index beautySettingTypeStr:MDBeautySettingsLongLegAmountKey];
-    [self.adapter setBeautyLenghLegValue:longLegFactor];
-    [self updateRender];
+//    [self.adapter setBeautyLenghLegValue:longLegFactor];
+//    [self updateRender];
 }
 
 - (void)didSetSkinWhitenValue:(CGFloat)value {
-    [self.adapter setSkinWhitenValue:value];
-    [self updateRender];
+//    [self.adapter setSkinWhitenValue:value];
+//    [self updateRender];
 }
 
 - (void)didSetSmoothSkinValue:(CGFloat)value {
-    [self.adapter setSkinSmoothValue:value];
-    [self updateRender];
+//    [self.adapter setSkinSmoothValue:value];
+//    [self updateRender];
 }
 
 - (void)didSetBigEyeValue:(CGFloat)value {
-    [self.adapter setBeautyBigEyeValue:value];
-    [self updateRender];
+//    [self.adapter setBeautyBigEyeValue:value];
+//    [self updateRender];
 }
 
 - (void)didSetThinFaceValue:(CGFloat)value {
-    [self.adapter setBeautyThinFaceValue:value];
-    [self updateRender];
+//    [self.adapter setBeautyThinFaceValue:value];
+//    [self updateRender];
 }
 
 - (void)updateBeautySetting {
     MDBeautySettings *beautySettings = [[MDBeautySettings alloc] initWithDictionary:self.realBeautySettingDict];
     FDKDecoration *decoration = [beautySettings makeDecoration];
     decoration.beautySettings.gradualSwitch = NO;
-    [self.adapter updateDecoration:decoration];
+//    [self.adapter updateDecoration:decoration];
 
     [self updateRender];
 }

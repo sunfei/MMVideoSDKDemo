@@ -310,6 +310,8 @@
 		767D69EA223EC04100FA343E /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 767D69E9223EC04100FA343E /* libiconv.tbd */; };
 		767D69EC223EC04600FA343E /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 767D69EB223EC04600FA343E /* Vision.framework */; };
 		768B457C2241F7FF008D4675 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 768B457B2241F7FF008D4675 /* Assets.xcassets */; };
+		76CA475E24586376003421BF /* ContentRReleaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76CA475D24586376003421BF /* ContentRReleaseViewController.swift */; };
+		76CA4760245864BF003421BF /* IMG_3074.MOV in Resources */ = {isa = PBXBuildFile; fileRef = 76CA475F245864BF003421BF /* IMG_3074.MOV */; };
 		76E9A88E21AFDDB5002B191A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E9A88D21AFDDB5002B191A /* AppDelegate.m */; };
 		76E9A89121AFDDB5002B191A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 76E9A89021AFDDB5002B191A /* ViewController.m */; };
 		76E9A89421AFDDB5002B191A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76E9A89221AFDDB5002B191A /* Main.storyboard */; };
@@ -933,6 +935,8 @@
 		767D69E9223EC04100FA343E /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		767D69EB223EC04600FA343E /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		768B457B2241F7FF008D4675 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		76CA475D24586376003421BF /* ContentRReleaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRReleaseViewController.swift; sourceTree = "<group>"; };
+		76CA475F245864BF003421BF /* IMG_3074.MOV */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = IMG_3074.MOV; sourceTree = "<group>"; };
 		76D21F8921B0C938001103B0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		76E9A88921AFDDB5002B191A /* MDRecordSDK.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDRecordSDK.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		76E9A88C21AFDDB5002B191A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -2354,6 +2358,7 @@
 		76E9A88B21AFDDB5002B191A /* MDRecordSDK */ = {
 			isa = PBXGroup;
 			children = (
+				76CA475F245864BF003421BF /* IMG_3074.MOV */,
 				76165DE82387FEDC005AACCD /* RecordSDKUI */,
 				768B457B2241F7FF008D4675 /* Assets.xcassets */,
 				7665F72F2241DD1A006F5999 /* GT.embeddedframework_v2.2.3 */,
@@ -2361,6 +2366,7 @@
 				76332C3921FF233100A8B33C /* Support */,
 				76E9A88F21AFDDB5002B191A /* ViewController.h */,
 				76E9A89021AFDDB5002B191A /* ViewController.m */,
+				76CA475D24586376003421BF /* ContentRReleaseViewController.swift */,
 				76E9A89221AFDDB5002B191A /* Main.storyboard */,
 				76E9A89721AFDDB6002B191A /* LaunchScreen.storyboard */,
 				76E9A89A21AFDDB6002B191A /* Info.plist */,
@@ -2456,6 +2462,7 @@
 				7603417C225607FF00713A03 /* IOS端对外接入文档.md in Resources */,
 				761661232387FEDE005AACCD /* doki_res.bundle in Resources */,
 				7616611F2387FEDE005AACCD /* New_Decoration_Face.geojson in Resources */,
+				76CA4760245864BF003421BF /* IMG_3074.MOV in Resources */,
 				7665F7352241DD1A006F5999 /* GT.bundle in Resources */,
 				761661222387FEDE005AACCD /* filters.bundle in Resources */,
 				7616617A2387FEDF005AACCD /* README.md in Resources */,
@@ -2499,6 +2506,7 @@
 				761660EC2387FEDE005AACCD /* MDRecordFilterModelLoader.m in Sources */,
 				761660B62387FEDE005AACCD /* MDSpecialEffectsManager.m in Sources */,
 				76E9A89121AFDDB5002B191A /* ViewController.m in Sources */,
+				76CA475E24586376003421BF /* ContentRReleaseViewController.swift in Sources */,
 				7616614C2387FEDF005AACCD /* UIImage+RoundedCorner.m in Sources */,
 				761660A22387FEDE005AACCD /* MDMediaEditTextColorSelectView.m in Sources */,
 				761660BA2387FEDE005AACCD /* MDSpecialEffectsSelectView.m in Sources */,

@@ -5,7 +5,6 @@
 #import "AppDelegate.h"
 #import "MDFaceTipManager.h"
 #import "MDFaceTipItem.h"
-#import "MDRecordingAdapter+MDAudioPitch.h"
 //#import "MDCameraBottomView.h"
 #import "MDMusicEditPalletController.h"
 #import "MDMusicCollectionItem.h"

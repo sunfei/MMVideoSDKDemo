@@ -119,6 +119,17 @@ static const NSInteger kMaxImageStickerCount = 20;
 - (MDVideoEditorAdapter *)adapter {
     if (!_adapter) {
         _adapter = [[MDVideoEditorAdapter alloc] initWithToken:@""];
+        
+        _adapter.autoComposite = YES;
+        [_adapter setSourceVolume:1.0];
+        _adapter.playToEndTime = ^(AVPlayer * _Nonnull player) {
+            [self.adapter seekTime:kCMTimeZero];
+            [self.adapter play];
+        };
+        _adapter.playerPeriodicTimeCallback = ^(CMTime time) {
+            
+        };
+        [_adapter setVideoDisplaySize:CGSizeMake(720, 1280)];
     }
     return _adapter;
 }
@@ -157,58 +168,59 @@ static const NSInteger kMaxImageStickerCount = 20;
                            musicItem:(MDMusicCollectionItem *)musicItem
 {
     
-    __weak typeof(self) weakself = self;
-    self.adapter.playToEndTime = ^(AVPlayer * _Nonnull player) {
-        __strong typeof(self) self = weakself;
-        if (![self.speedVaryVc isViewVisible] && self.exportTask == nil && !self.specialEffectsVc.isShow) {
-            [player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
-            [self play];
-        }
-    };
-    
-    self.adapter.playerPeriodicTimeCallback = ^(CMTime time) {
-        __strong typeof(self) self = weakself;
-        if ([self.musicSelectPicker viewIsShowing]) {
-            [self.musicSelectPicker periodicTimeCallback:time];
-        }
-    };
-    
-    [self.adapter enableAIBeauty:YES];
-    
-    self.document = [[MDDocument alloc] initWithAsset:videoAsset documentContent:nil];
-    self.document.videoInsertTimeRange = videoTimeRange;
-    self.document.videoExportTimeRange = videoTimeRange;
-    self.document.backgroundMusicURL = musicURL;
-    self.document.backgroundMusicTimeRange = musicTimeRange;
-    self.document.adapter = self.adapter;
-//    self.document.specialPipline = self.adapter.specialEffectsFilter.pipline;
-    
-    self.document.sourceAudioVolume =  1.0;
-    self.document.backgroundMusicVolume = 0.0;
-    if (musicURL) {
-        self.document.sourceAudioVolume = 0;
-        self.document.muteSourceAudioVolume = YES;
-        self.document.backgroundMusicVolume = 1.0;
-    }
-    
-    if (MDRecordVideoSettingManager.enableBlur) {
-        [self.adapter setVideoDisplaySize:CGSizeMake(720, 1280)];
-    }
-    
-    _videoSize = [self.adapter videoDisplaySize];
-    if (CGSizeEqualToSize(_videoSize, CGSizeZero)) {
-        AVAssetTrack *track = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] firstObject];
-        CGSize presentationSize = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
-        presentationSize.width = ABS(presentationSize.width);
-        presentationSize.height = ABS(presentationSize.height);
-        _videoSize = presentationSize;
-    }
-
-    [self setupMusicPicker];
-    [self.musicSelectPicker setOriginDefaultMusicVolume:self.document.backgroundMusicVolume];
-    [self.musicSelectPicker updateMusicItem:musicItem timeRange:musicTimeRange];
-    
-    [self updateComposition];
+//    __weak typeof(self) weakself = self;
+//    self.adapter.playToEndTime = ^(AVPlayer * _Nonnull player) {
+//        __strong typeof(self) self = weakself;
+//        if (![self.speedVaryVc isViewVisible] && self.exportTask == nil && !self.specialEffectsVc.isShow) {
+//            [player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+//            [self play];
+//        }
+//    };
+//
+//    self.adapter.playerPeriodicTimeCallback = ^(CMTime time) {
+//        __strong typeof(self) self = weakself;
+//        if ([self.musicSelectPicker viewIsShowing]) {
+//            [self.musicSelectPicker periodicTimeCallback:time];
+//        }
+//    };
+//
+////    [self.adapter enableAIBeauty:YES];
+//
+//    self.document = [[MDDocument alloc] initWithAsset:videoAsset documentContent:nil];
+//    self.document.videoInsertTimeRange = videoTimeRange;
+//    self.document.videoExportTimeRange = videoTimeRange;
+//    self.document.backgroundMusicURL = musicURL;
+//    self.document.backgroundMusicTimeRange = musicTimeRange;
+//    self.document.adapter = self.adapter;
+////    self.document.specialPipline = self.adapter.specialEffectsFilter.pipline;
+//
+//    self.document.sourceAudioVolume =  1.0;
+//    self.document.backgroundMusicVolume = 0.0;
+//    if (musicURL) {
+//        self.document.sourceAudioVolume = 0;
+//        self.document.muteSourceAudioVolume = YES;
+//        self.document.backgroundMusicVolume = 1.0;
+//    }
+//
+//    if (MDRecordVideoSettingManager.enableBlur) {
+//        [self.adapter setVideoDisplaySize:CGSizeMake(720, 1280)];
+//    }
+//
+//    _videoSize = [self.adapter videoDisplaySize];
+//    if (CGSizeEqualToSize(_videoSize, CGSizeZero)) {
+//        AVAssetTrack *track = [[videoAsset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+//        CGSize presentationSize = CGSizeApplyAffineTransform(track.naturalSize, track.preferredTransform);
+//        presentationSize.width = ABS(presentationSize.width);
+//        presentationSize.height = ABS(presentationSize.height);
+//        _videoSize = presentationSize;
+//    }
+//
+//    [self setupMusicPicker];
+//    [self.musicSelectPicker setOriginDefaultMusicVolume:self.document.backgroundMusicVolume];
+//    [self.musicSelectPicker updateMusicItem:musicItem timeRange:musicTimeRange];
+//
+//    [self updateComposition];
+    [self.adapter loadVideo:videoAsset];
     
 }
 
@@ -251,14 +263,14 @@ static const NSInteger kMaxImageStickerCount = 20;
     self.isBackground = YES;
     [self pause];
     
-    [self.adapter waitUntilAllOperationsAreFinished];
+//    [self.adapter waitUntilAllOperationsAreFinished];
     [self.exportTask cancel];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification {
     self.isBackground = NO;
     
-    self.adapter.overlayImage = nil;
+//    self.adapter.overlayImage = nil;
     [self updateComposition];
     
     if ([_speedVaryVc isViewVisible]) {
@@ -276,39 +288,39 @@ static const NSInteger kMaxImageStickerCount = 20;
 - (void)updateBuilderSetting {
     MDVideoEditorAdapter *adapter = self.adapter;
     // 更新所有builder相关属性
-    [adapter setVideoTimeRange:self.document.videoExportTimeRange];
-//    [adapter setVideoPerferredTransform:self.document.videoPreferredTransform];
-    [adapter setPitchShiftURL:self.document.sourcePitchShiftURL];
-    [adapter setMediaSourceRepeatRange:self.document.mediaSourceRepeatRange];
-    
-    if (self.document.timeEffectsItem) {
-        [adapter setTimeRangeMappingEffects:@[self.document.timeEffectsItem]];
-    } else if (self.document.timeRangeMappingEffects.count > 0) {
-        [adapter setTimeRangeMappingEffects:MLTimeRangeMappingEffectSquenceGetMappedSquence(self.document.timeRangeMappingEffects)];
-    } else {
-        [adapter setTimeRangeMappingEffects:@[]];
-    }
-    
-    adapter.backgroundAudioURL = self.document.backgroundMusicURL;
-    adapter.backgroundAudioRange = self.document.backgroundMusicTimeRange;
-    [adapter setSourceVolume:self.document.sourceAudioVolume];
-    [adapter setBackgroundMusicVolume:self.document.backgroundMusicVolume];
-//    [adapter setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    // 更新视频源
-    [adapter loadVideo:self.document.assetToBeProcessed];
+//    [adapter setVideoTimeRange:self.document.videoExportTimeRange];
+////    [adapter setVideoPerferredTransform:self.document.videoPreferredTransform];
+//    [adapter setPitchShiftURL:self.document.sourcePitchShiftURL];
+//    [adapter setMediaSourceRepeatRange:self.document.mediaSourceRepeatRange];
+//
+//    if (self.document.timeEffectsItem) {
+//        [adapter setTimeRangeMappingEffects:@[self.document.timeEffectsItem]];
+//    } else if (self.document.timeRangeMappingEffects.count > 0) {
+//        [adapter setTimeRangeMappingEffects:MLTimeRangeMappingEffectSquenceGetMappedSquence(self.document.timeRangeMappingEffects)];
+//    } else {
+//        [adapter setTimeRangeMappingEffects:@[]];
+//    }
+//
+//    adapter.backgroundAudioURL = self.document.backgroundMusicURL;
+//    adapter.backgroundAudioRange = self.document.backgroundMusicTimeRange;
+//    [adapter setSourceVolume:self.document.sourceAudioVolume];
+//    [adapter setBackgroundMusicVolume:self.document.backgroundMusicVolume];
+////    [adapter setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+//    // 更新视频源
+//    [adapter loadVideo:self.document.assetToBeProcessed];
 }
 
 - (void)updateComposition {
     
-    [self updateBuilderSetting];
-    NSError *error = nil;
-    [self.adapter compositeVideoWithError:&error];
-    NSLog(@"error = %@", error);
+//    [self updateBuilderSetting];
+//    NSError *error = nil;
+//    [self.adapter compositeVideoWithError:&error];
+//    NSLog(@"error = %@", error);
 }
 
 - (void)updateAudioMix {
-    [self updateBuilderSetting];
-    [self.adapter updateAudioMix];
+//    [self updateBuilderSetting];
+//    [self.adapter updateAudioMix];
 }
 
 - (void)topicListDidRefresh
@@ -446,7 +458,7 @@ static const NSInteger kMaxImageStickerCount = 20;
         if (self.filters.count >= 2) {
             self.currentFilterIndex = index;
             MDRecordFilter *filterA = [self.filters objectAtIndex:index defaultValue:nil];
-            [self.adapter configCurrentFilter:filterA];
+//            [self.adapter configCurrentFilter:filterA];
         }
         
     });
@@ -489,10 +501,10 @@ static const NSInteger kMaxImageStickerCount = 20;
 - (void)updateBeautySetting {
     MDBeautySettings *beautySettings = [[MDBeautySettings alloc] initWithDictionary:self.realBeautySettingDict];
 
-    [self.adapter setBeautyBigEyeValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsEyesEnhancementAmountKey defaultValue:0.0f]];
-    [self.adapter setBeautyThinFaceValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsFaceThinningAmountKey defaultValue:0.0f]];
-    [self.adapter setSkinWhitenValue: [self.realBeautySettingDict floatForKey:MDBeautySettingsSkinWhitenAmountKey defaultValue:0.0f]];
-    [self.adapter setSkinSmoothValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsSkinSmoothingAmountKey defaultValue:0.0f]];
+//    [self.adapter setBeautyBigEyeValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsEyesEnhancementAmountKey defaultValue:0.0f]];
+//    [self.adapter setBeautyThinFaceValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsFaceThinningAmountKey defaultValue:0.0f]];
+//    [self.adapter setSkinWhitenValue: [self.realBeautySettingDict floatForKey:MDBeautySettingsSkinWhitenAmountKey defaultValue:0.0f]];
+//    [self.adapter setSkinSmoothValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsSkinSmoothingAmountKey defaultValue:0.0f]];
 //    [self.adapter setBeautyLenghLegValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsLongLegAmountKey defaultValue:-1]];
 //    [self.adapter setBeautyThinBodyValue:[self.realBeautySettingDict floatForKey:MDBeautySettingsThinBodyAmountKey defaultValue:-1]];
     
@@ -555,8 +567,8 @@ static const NSInteger kMaxImageStickerCount = 20;
     [self setupStickerChooseController];
     [self.stickerViewController showWithAnimated:YES completion: ^{
         if ([self.delegate respondsToSelector:@selector(videoPlayerChangeWith:transform:)]) {
-            UIView *view = self.adapter.playerViewController.view;
-            [self.delegate videoPlayerChangeWith:view.center transform:view.transform];
+//            UIView *view = self.adapter.playerViewController.view;
+//            [self.delegate videoPlayerChangeWith:view.center transform:view.transform];
         }
     }];
 }
@@ -565,7 +577,7 @@ static const NSInteger kMaxImageStickerCount = 20;
 {
     if ([aSticker isKindOfClass:[MDRecordDynamicSticker class]]) {
         [self.stickerViewController removeSticker:aSticker];
-        [self.adapter removeDynamicSticker:aSticker];
+//        [self.adapter removeDynamicSticker:aSticker];
     }
 }
 
@@ -574,16 +586,16 @@ static const NSInteger kMaxImageStickerCount = 20;
 }
 
 - (void)setupStickerChooseController {
-    if (!_stickerViewController) {
-        _stickerViewController = [[MDRStickerViewController alloc] initWithAdapter:self.adapter
-                                                                             asset:self.document.asset];
-        _stickerViewController.delegate = self;
-    }
-    
-    [_stickerViewController willMoveToParentViewController:self.viewController];
-    [self.viewController.containerView insertSubview:_stickerViewController.view atIndex:0];
-    [self.viewController addChildViewController:_stickerViewController];
-    [_stickerViewController didMoveToParentViewController:self.viewController];
+//    if (!_stickerViewController) {
+//        _stickerViewController = [[MDRStickerViewController alloc] initWithAdapter:self.adapter
+//                                                                             asset:self.document.asset];
+//        _stickerViewController.delegate = self;
+//    }
+//
+//    [_stickerViewController willMoveToParentViewController:self.viewController];
+//    [self.viewController.containerView insertSubview:_stickerViewController.view atIndex:0];
+//    [self.viewController addChildViewController:_stickerViewController];
+//    [_stickerViewController didMoveToParentViewController:self.viewController];
 }
 
 #pragma mark - MDRStickerViewControllerDelegate Methods
@@ -593,11 +605,11 @@ static const NSInteger kMaxImageStickerCount = 20;
     [self.delegate didHideStickerChooseView];
     
     [self.tmpDynamicStickers removeAllObjects];
-    [self.viewController.view insertSubview:self.adapter.playerViewController.view atIndex:0];
-    if ([self.delegate respondsToSelector:@selector(videoPlayerChangeWith:transform:)]) {
-        UIView *view = self.adapter.playerViewController.view;
-        [self.delegate videoPlayerChangeWith:view.center transform:view.transform];
-    }
+//    [self.viewController.view insertSubview:self.adapter.playerViewController.view atIndex:0];
+//    if ([self.delegate respondsToSelector:@selector(videoPlayerChangeWith:transform:)]) {
+//        UIView *view = self.adapter.playerViewController.view;
+//        [self.delegate videoPlayerChangeWith:view.center transform:view.transform];
+//    }
 }
 
 - (void)cancelEditSticker:(MDRStickerViewController *)controller {
@@ -609,11 +621,11 @@ static const NSInteger kMaxImageStickerCount = 20;
     }
     [self.tmpDynamicStickers removeAllObjects];
 
-    [self.viewController.view insertSubview:self.adapter.playerViewController.view atIndex:0];
-    if ([self.delegate respondsToSelector:@selector(videoPlayerChangeWith:transform:)]) {
-        UIView *view = self.adapter.playerViewController.view;
-        [self.delegate videoPlayerChangeWith:view.center transform:view.transform];
-    }
+//    [self.viewController.view insertSubview:self.adapter.playerViewController.view atIndex:0];
+//    if ([self.delegate respondsToSelector:@selector(videoPlayerChangeWith:transform:)]) {
+//        UIView *view = self.adapter.playerViewController.view;
+//        [self.delegate videoPlayerChangeWith:view.center transform:view.transform];
+//    }
 }
 
 - (void)didSelecedSticker:(MDRStickerViewController *)controller
@@ -633,7 +645,7 @@ static const NSInteger kMaxImageStickerCount = 20;
     
     [self.tmpDynamicStickers addObject:sticker];
     
-    [self.adapter addDynamicSticker:sticker];
+//    [self.adapter addDynamicSticker:sticker];
         
     [self.delegate didHidestickerChooseViewWithSticker:sticker center:center errorMsg:nil];
 }
@@ -759,7 +771,7 @@ static const NSInteger kMaxImageStickerCount = 20;
     
     // 不再调用stop或者replay临时解决因为调用pause再调用compositeVideoWithError: 造成视频卡住，mediaServiceWereReset & mediaServiceWereLost的问题
 //    [self.adapter seekTime:kCMTimeZero];
-    [self.adapter replay];
+//    [self.adapter replay];
 }
 
 #pragma mark - 封面选取相关
@@ -773,10 +785,10 @@ static const NSInteger kMaxImageStickerCount = 20;
 
 - (void)preloadThumbs
 {
-    self.coverCopyedAsset = [self.adapter.composition copy];
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.f) {
-        [self setupThumbDataManager];
-    }
+//    self.coverCopyedAsset = [self.adapter.composition copy];
+//    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.f) {
+//        [self setupThumbDataManager];
+//    }
 }
 
 - (UIImage *)defaultLargeCoverImage
@@ -842,7 +854,7 @@ static const NSInteger kMaxImageStickerCount = 20;
 {
     BBMediaGraffitiEditorViewController *graffitiEditorVC = [[BBMediaGraffitiEditorViewController alloc] init];
     graffitiEditorVC.initialGraffitiCanvasImage = self.initialGraffitiCanvasImage;
-    graffitiEditorVC.initialMosaicCanvasImage = self.adapter.mosaicCanvasImage;
+//    graffitiEditorVC.initialMosaicCanvasImage = self.adapter.mosaicCanvasImage;
     graffitiEditorVC.renderFrame = [self videoRenderFrame];
     
     [self.delegate willShowGraffitiEditor];
@@ -863,7 +875,7 @@ static const NSInteger kMaxImageStickerCount = 20;
     }];
     
     [vc setCanvasImageUpdatedHandler:^(UIImage *canvasImage, UIImage *mosaicCanvasImage) {
-        [self.adapter setGraffitiCanvasImage:nil mosaicCanvasImage:mosaicCanvasImage];
+//        [self.adapter setGraffitiCanvasImage:nil mosaicCanvasImage:mosaicCanvasImage];
         weakSelf.hasGraffiti = !(canvasImage == nil && mosaicCanvasImage == nil);
         weakSelf.initialGraffitiCanvasImage = canvasImage;
         [weakSelf.delegate graffitiEditorUpdateWithCanvasImage:canvasImage mosaicCanvasImage:mosaicCanvasImage];
@@ -935,23 +947,23 @@ static const NSInteger kMaxImageStickerCount = 20;
 }
 
 - (void)setupSpecialEffectsVc {
-    if (!self.specialEffectsVc) {
-        self.specialEffectsVc = [[MDSpecialEffectsController alloc] initWithDocument:self.document
-                                                                playerViewController:(id)self.adapter.playerViewController
-                                                                            delegate:self];
-        self.specialEffectsVc.specialImageArray = self.specialImageManager.momentThumbDataArray;
-    }
-    
-    if ([self.specialEffectsVc.view superview]) {
-        [self.specialEffectsVc willMoveToParentViewController:nil];
-        [self.specialEffectsVc.view removeFromSuperview];
-        [self.specialEffectsVc removeFromParentViewController];
-    }
-    [self.viewController addChildViewController:self.specialEffectsVc];
-    [self.viewController.view addSubview:self.specialEffectsVc.view];
-    [self.specialEffectsVc didMoveToParentViewController:self.viewController];
-    
-    [self.specialEffectsVc showWithAnimated:YES];
+//    if (!self.specialEffectsVc) {
+//        self.specialEffectsVc = [[MDSpecialEffectsController alloc] initWithDocument:self.document
+//                                                                playerViewController:(id)self.adapter.playerViewController
+//                                                                            delegate:self];
+//        self.specialEffectsVc.specialImageArray = self.specialImageManager.momentThumbDataArray;
+//    }
+//
+//    if ([self.specialEffectsVc.view superview]) {
+//        [self.specialEffectsVc willMoveToParentViewController:nil];
+//        [self.specialEffectsVc.view removeFromSuperview];
+//        [self.specialEffectsVc removeFromParentViewController];
+//    }
+//    [self.viewController addChildViewController:self.specialEffectsVc];
+//    [self.viewController.view addSubview:self.specialEffectsVc.view];
+//    [self.specialEffectsVc didMoveToParentViewController:self.viewController];
+//
+//    [self.specialEffectsVc showWithAnimated:YES];
 }
 
 // MDSpecialEffectsControllerDelegate
@@ -960,20 +972,20 @@ static const NSInteger kMaxImageStickerCount = 20;
 }
 
 - (void)specialEffectsDidFinishedEditing {
-    MDVideoEditorAdapter *adapter = self.adapter;
-    [adapter replay];
-    
-    [self.viewController addChildViewController:adapter.playerViewController];
-    [self.viewController.view insertSubview:adapter.playerViewController.view atIndex:0];
-    [adapter.playerViewController didMoveToParentViewController:self.viewController];
+//    MDVideoEditorAdapter *adapter = self.adapter;
+//    [adapter replay];
+//
+//    [self.viewController addChildViewController:adapter.playerViewController];
+//    [self.viewController.view insertSubview:adapter.playerViewController.view atIndex:0];
+//    [adapter.playerViewController didMoveToParentViewController:self.viewController];
 }
 
 - (NSArray *)specialEffectsTypeArray {
     NSMutableSet *set = [NSMutableSet set];
-    for (GPUImageOutput<GPUImageInput,MDRSpecialFilterLifeStyleProtocol> *filter in [self.adapter.specialFilters copy]) {
-        MDRecordSpecialEffectsType type = [MDRecordSpecialEffectsManager getSpecialEffectsTypeWithFilter:filter];
-        [set addObject:@(type)];
-    }
+//    for (GPUImageOutput<GPUImageInput,MDRSpecialFilterLifeStyleProtocol> *filter in [self.adapter.specialFilters copy]) {
+//        MDRecordSpecialEffectsType type = [MDRecordSpecialEffectsManager getSpecialEffectsTypeWithFilter:filter];
+//        [set addObject:@(type)];
+//    }
     if (self.document.timeEffectsItem) {
         CMTime duration = self.document.timeEffectsItem.timeRange.duration;
         CMTime targetDuration = self.document.timeEffectsItem.targetDuration;
@@ -1011,10 +1023,10 @@ static const NSInteger kMaxImageStickerCount = 20;
 - (void)setupSpeedVaryVc
 {
     if (!self.speedVaryVc) {
-        _speedVaryVc = [[MDVideoSpeedVaryViewController alloc] initWithAsset:[self.adapter.composition copy]
-                                                                        document:self.document
-                                                                        delegate:self];
-        _speedVaryVc.player =self.adapter.player;
+//        _speedVaryVc = [[MDVideoSpeedVaryViewController alloc] initWithAsset:[self.adapter.composition copy]
+//                                                                        document:self.document
+//                                                                        delegate:self];
+//        _speedVaryVc.player =self.adapter.player;
     }
     
     if ([self.speedVaryVc.view superview]) {
@@ -1062,7 +1074,7 @@ static const NSInteger kMaxImageStickerCount = 20;
             return;
         }
 
-        self.document.videoExportTimeRange = [self renderTimeRange:CMTimeRangeMake(kCMTimeZero, self.adapter.composition.duration)];
+//        self.document.videoExportTimeRange = [self renderTimeRange:CMTimeRangeMake(kCMTimeZero, self.adapter.composition.duration)];
         [self exportForUpload];
     }
 }
@@ -1071,7 +1083,7 @@ static const NSInteger kMaxImageStickerCount = 20;
 {
     if (self.exportTask) {
         [self.exportTask cancel];
-        self.adapter.overlayImage = nil;
+//        self.adapter.overlayImage = nil;
     }
     self.exporting = NO;
 }
@@ -1113,54 +1125,54 @@ static const NSInteger kMaxImageStickerCount = 20;
 
 - (void)configExportVideoSetting {
     
-    [self.adapter setVideoTimeRange:self.document.videoExportTimeRange];
-    self.adapter.overlayImage = self.document.customOverlay;
+//    [self.adapter setVideoTimeRange:self.document.videoExportTimeRange];
+//    self.adapter.overlayImage = self.document.customOverlay;
     
-    float destBitRate = 0.0; //[[[MDContext currentUser] dbStateHoldProvider] momentRecordExportBitRate];
-    if (fabsf(destBitRate) <= 0.00001f) {
-        destBitRate = (5.0 * 1024 * 1024);
-    }
-    
-    float sourceBitRate = 0.0;
-    
-    CGSize naturalSize  = self.adapter.composition.naturalSize;
-    for (AVMutableCompositionTrack *track in self.adapter.composition.tracks) {
-        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
-            naturalSize = [track naturalSize];
-            sourceBitRate = [track estimatedDataRate];
-        }
-    }
-    
-    CGSize presentationSize = CGSizeMake(720, 1280);
-    
-    if (fabsf(sourceBitRate) <= 0.00001f) {
-        sourceBitRate = (3.0 * 1024 * 1024);
-    }
-    
-    if (presentationSize.width*presentationSize.height > 1280*720) {
-        //走高清策略，且分辨率大于720P，即分辨率1080P，最大码率设为7M
-        CGFloat maxBitRate = 7.0 * 1024 *1024;
-        if (sourceBitRate > maxBitRate) {
-            sourceBitRate = maxBitRate;
-        }
-    }else {
-        if (sourceBitRate > destBitRate) {
-            sourceBitRate = (self.document.useOriginalBitRate ? sourceBitRate : destBitRate);
-        }
-    }
-    
-    // 设置导出码率
-    if (MDRecordVideoSettingManager.exportBitRate <= 0) {
-        [self.adapter setTargetBitRate:sourceBitRate];
-    } else {
-        [self.adapter setTargetBitRate:MDRecordVideoSettingManager.exportBitRate];
-    }
-    // 设置导出视频大小
-//    [self.adapter setPresentationSize:[self.adapter videoDisplaySize]];
-    // 设置导出帧率
-    [self.adapter setTargetFrameRate:MDRecordVideoSettingManager.exportFrameRate ?: 30];
-    // 设置是否需要经过滤镜
-    [self.adapter enableFilterEffect:YES];
+//    float destBitRate = 0.0; //[[[MDContext currentUser] dbStateHoldProvider] momentRecordExportBitRate];
+//    if (fabsf(destBitRate) <= 0.00001f) {
+//        destBitRate = (5.0 * 1024 * 1024);
+//    }
+//
+//    float sourceBitRate = 0.0;
+//
+//    CGSize naturalSize  = self.adapter.composition.naturalSize;
+//    for (AVMutableCompositionTrack *track in self.adapter.composition.tracks) {
+//        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+//            naturalSize = [track naturalSize];
+//            sourceBitRate = [track estimatedDataRate];
+//        }
+//    }
+//
+//    CGSize presentationSize = CGSizeMake(720, 1280);
+//
+//    if (fabsf(sourceBitRate) <= 0.00001f) {
+//        sourceBitRate = (3.0 * 1024 * 1024);
+//    }
+//
+//    if (presentationSize.width*presentationSize.height > 1280*720) {
+//        //走高清策略，且分辨率大于720P，即分辨率1080P，最大码率设为7M
+//        CGFloat maxBitRate = 7.0 * 1024 *1024;
+//        if (sourceBitRate > maxBitRate) {
+//            sourceBitRate = maxBitRate;
+//        }
+//    }else {
+//        if (sourceBitRate > destBitRate) {
+//            sourceBitRate = (self.document.useOriginalBitRate ? sourceBitRate : destBitRate);
+//        }
+//    }
+//
+//    // 设置导出码率
+//    if (MDRecordVideoSettingManager.exportBitRate <= 0) {
+//        [self.adapter setTargetBitRate:sourceBitRate];
+//    } else {
+//        [self.adapter setTargetBitRate:MDRecordVideoSettingManager.exportBitRate];
+//    }
+//    // 设置导出视频大小
+////    [self.adapter setPresentationSize:[self.adapter videoDisplaySize]];
+//    // 设置导出帧率
+//    [self.adapter setTargetFrameRate:MDRecordVideoSettingManager.exportFrameRate ?: 30];
+//    // 设置是否需要经过滤镜
+//    [self.adapter enableFilterEffect:YES];
     
 }
 
@@ -1267,7 +1279,8 @@ static const NSInteger kMaxImageStickerCount = 20;
 - (CGRect)videoRenderFrame
 {
 //    return self.adapter.videoRenderFrame;
-    return self.adapter.playerViewController.view.bounds;
+//    return self.adapter.playerViewController.view.bounds;
+    return CGRectZero;
 }
 
 #pragma mark - 辅助方法

@@ -18,7 +18,7 @@ target :MDRecordSDK do
     pod 'ReactiveCocoa', '2.5'
     pod 'JPImageresizerView'
     
-    pod 'MMVideoSDK', '2.4.0.1', :source => 'https://github.com/cosmos33/MMSpecs.git'
+    pod 'MMVideoSDK', '2.4.0.6', :source => 'https://github.com/cosmos33/MMSpecs.git'
     pod 'MCCSecret'
 end
 

@@ -29,6 +29,8 @@
 #import "MDRecordSettingViewController.h"
 #import "MDRecordVideoEditSettingViewController.h"
 
+#import "MDRecordSDK-Swift.h"
+
 @interface ViewController ()
 
 @end
@@ -169,8 +171,11 @@
             break;
         case 1: {
 //            [self gotoRecord:MDUnifiedRecordLevelTypeAsset];
-            MDRecordVideoEditSettingViewController *vc = [[MDRecordVideoEditSettingViewController alloc] init];
-            [self.navigationController pushViewController:vc animated:YES];
+//            MDRecordVideoEditSettingViewController *vc = [[MDRecordVideoEditSettingViewController alloc] init];
+//            [self.navigationController pushViewController:vc animated:YES];
+            
+            ContentRReleaseViewController *vc = [[ContentRReleaseViewController alloc] init];
+            [self.navigationController pushViewController:vc type:YES];
         }
             break;
         case 2: {
