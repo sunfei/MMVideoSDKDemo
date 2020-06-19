@@ -20,7 +20,7 @@ target :MDRecordSDK do
     pod 'JPImageresizerView'
     pod 'GPUImage', :git => 'https://github.com/NaichuanYang/GPUImage.git', :commit => '3ba128277babc67048e10c5269694aebaa8bf581'
     
-    pod 'MMVideoSDK', '2.3.2.3.2'
+    pod 'MMVideoSDK', '2.3.3.3', :source => 'https://github.com/cosmos33/MMSpecs.git'
 end
 
 post_install do |installer|

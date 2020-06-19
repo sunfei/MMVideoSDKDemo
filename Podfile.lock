@@ -26,11 +26,12 @@ PODS:
   - libwebp/utils (1.0.2):
     - libwebp/core
   - libwebp/webp (1.0.2)
-  - Mantle (2.1.0):
-    - Mantle/extobjc (= 2.1.0)
-  - Mantle/extobjc (2.1.0)
+  - Mantle (2.1.1):
+    - Mantle/extobjc (= 2.1.1)
+  - Mantle/extobjc (2.1.1)
   - Masonry (1.1.0)
   - MBProgressHUD (1.1.0)
+  - MCCSecret (1.0.0)
   - MDLog (1.2.4):
     - MDLoggerService
   - MDLoggerService (0.1.0)
@@ -38,9 +39,12 @@ PODS:
     - MetalPetal/Core (= 1.4.2)
   - MetalPetal/Core (1.4.2)
   - MJRefresh (3.2.0)
-  - MMCV (1.0.16.2):
+  - MMCV (1.1.2):
+    - MCCSecret
+    - MMFileService
+    - MNReferee
     - ZipArchive
-  - MMFileService (1.1.0-hs)
+  - MMFileService (1.3.1)
   - MMFrameworks (1.0.0):
     - MMFrameworks/Eta (= 1.0.0)
     - MMFrameworks/MMFoundation (= 1.0.0)
@@ -61,15 +65,16 @@ PODS:
     - MetalPetal (= 1.4.2)
     - MMCV
     - MMXEScene
-  - MMVideoSDK (2.3.2.3.2):
+  - MMVideoSDK (2.3.3.3):
     - GPUImage
     - MDLog (~> 1.2.4)
     - MetalPetal (= 1.4.2)
-    - MMCV (~> 1.0.16.1)
-    - MMFileService (= 1.1.0-hs)
+    - MMCV (~> 1.1.2)
+    - MMFileService (~> 1.3.0)
     - MMMedia (~> 2.3.2.3.1)
     - MMXEScene (~> 1.1.0)
   - MMXEScene (1.1.3)
+  - MNReferee (1.0.2)
   - pop (1.0.12)
   - ReactiveCocoa (2.5):
     - ReactiveCocoa/UI (= 2.5)
@@ -97,7 +102,7 @@ DEPENDENCIES:
   - MBProgressHUD (~> 1.1.0)
   - MJRefresh
   - MMFrameworks
-  - MMVideoSDK (= 2.3.2.3.2)
+  - MMVideoSDK (= 2.3.3.3)
   - pop
   - ReactiveCocoa (= 2.5)
   - SDWebImage
@@ -122,6 +127,7 @@ SPEC REPOS:
     - YYImage
     - ZipArchive
   https://github.com/cosmos33/MMSpecs.git:
+    - MCCSecret
     - MDLog
     - MDLoggerService
     - MMCV
@@ -130,6 +136,7 @@ SPEC REPOS:
     - MMMedia
     - MMVideoSDK
     - MMXEScene
+    - MNReferee
 
 EXTERNAL SOURCES:
   GPUImage:
@@ -146,19 +153,21 @@ SPEC CHECKSUMS:
   JPImageresizerView: eedd90ce2082fa10f104f4282e428cd1c3da86b9
   KVOController: d72ace34afea42468329623b3379ab3cd1d286b6
   libwebp: b068a3bd7c45f7460f6715be7bed1a18fd5d6b48
-  Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
+  Mantle: 35238ae6f2e2b2d474fa7b67fee82a59fea71915
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  MCCSecret: 5658f66290969726586eddbdfe45e27731dbfa17
   MDLog: 63b50372531f8bee5c6634f23e58ce49102d6d2f
   MDLoggerService: a3a211b8327e16723335c8a2b646726c1c58bd47
   MetalPetal: c1773ffa37bb8a466ac93e25f6ccf8b09ee6022e
   MJRefresh: ed450d6eb9d3346a2cb033ab7eb6de090aeef437
-  MMCV: 3777a266d9293d0f536be7247e889ea748d30137
-  MMFileService: 5df06dcab167f04021c26755fac7db9fa0e164ae
+  MMCV: cfcb73e4e1793c7dd1d5aaa27d435fdd86109390
+  MMFileService: 4112b6ddb95c3612731044e300bae12accff3b8e
   MMFrameworks: f9b83d3ef607b4ad1a95b412e44ae6038b0e881f
   MMMedia: 02ea2514269a81054a59c4fac57a99f5a812817c
-  MMVideoSDK: 70e20b0209a780a9ec7cd06788cc429e3b87f5f3
+  MMVideoSDK: 325e7faaadf33e2525cbaa1aeb87eeb2bbdb75e8
   MMXEScene: 2fea0e26484ea497524609b008804b47c0af3014
+  MNReferee: be83ba6fa6efbca8d2dba1ff5ae3afd30384df4f
   pop: d582054913807fd11fd50bfe6a539d91c7e1a55a
   ReactiveCocoa: e2db045570aa97c695e7aa97c2bcab222ae51f4a
   SDWebImage: c10d14a8883ebd89664f02a422006f66a85c0c5d
@@ -166,6 +175,6 @@ SPEC CHECKSUMS:
   YYImage: 1e1b62a9997399593e4b9c4ecfbbabbf1d3f3b54
   ZipArchive: e25a4373192673e3229ac8d6e9f64a3e5713c966
 
-PODFILE CHECKSUM: 7e24581b1cdeddec85697c3bce1382a868f4b310
+PODFILE CHECKSUM: 0ea8ac96aae47b8a8ae7c29f267331ee6d396a40
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.9.1

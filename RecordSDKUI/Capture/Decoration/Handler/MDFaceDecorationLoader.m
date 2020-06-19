@@ -9,6 +9,7 @@
 #import "MDFaceDecorationLoader.h"
 #import "MDRSimpleHttpFetcher.h"
 @import MomoCVCenter;
+#import <MCCSecret/MCCSecret-umbrella.h>
 
 static NSString *fd_randomString(int len);
 static NSString * fd_urlencode(NSString *content);
